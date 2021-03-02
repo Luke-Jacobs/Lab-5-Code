@@ -61,7 +61,7 @@ assign MIO_EN = OE;
 //    Inputs: LD_MAR, LD_MDR, LD_IR, LD_BEN, LD_CC, LD_REG, LD_PC, LD_LED, GatePC, GateMDR, GateALU, GateMARMUX,
 //				  SR2MUX, ADDR1MUX, MARMUX, MIO_EN, Data_to_CPU
 //    Outputs: 
-datapath d0 (.*);
+datapath d0 (.*,.HEX0(hex_4[0][3:0]),.HEX1(hex_4[1][3:0]),.HEX2(hex_4[2][3:0]),.HEX3(hex_4[3][3:0]));
 
 // Break the tri-state bus to the ram into input/outputs 
 // Our SRAM and I/O controller (note, this plugs into MDR/MAR
@@ -77,8 +77,10 @@ Mem2IO memory_subsystem(
 ISDU state_controller(
 	.*, .Reset(Reset), .Run(Run), .Continue(Continue),
 	.Opcode(IR[15:12]), .IR_5(IR[5]), .IR_11(IR[11]),
-   .Mem_OE(OE), .Mem_WE(WE)
-);
+   .Mem_OE(OE), .Mem_WE(WE), .PCMUX(PCMUX), 
+	.DRMUX(DRMUX), .SR1MUX(SR1MUX), .ADDR2MUX(ADDR2MUX), 
+	.ALUK(ALUK)
+	);
 
 // SRAM WE register
 //logic SRAM_WE_In, SRAM_WE;
