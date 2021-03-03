@@ -8,7 +8,8 @@ module datapath(
 	input logic [1:0] PCMUX,
 	input logic [15:0] MDR_In, // This is the same thing as Data_to_CPU
 	output logic [3:0] HEX0, HEX1, HEX2, HEX3,
-	output logic [15:0] MAR
+	output logic [15:0] MAR,
+	output logic [15:0] MDR
 );
 	// WEEK 1 CODE - Reconnect Mem2IO to the hex drivers after week 1 demo
 
@@ -29,13 +30,14 @@ module datapath(
 	
 	// ===== MDR =====
 	logic [15:0] MDR_out, MDR_d;
+	assign MDR = MDR_out; //Makes sure MDR gets to the MEM2IO
 	reg_16 MDR_reg(.Clk(Clk), .D(MDR_d), .Data_Out(MDR_out), .Load(LD_MDR), .Reset(Reset));
 	// MDR Operations
-	mux_2_to_1 mux_mio_en(.a(MDR_In), .b(Bus_out), .select(MIO_EN));
+	mux_2_to_1 mux_mio_en(.a(Bus_out), .b(MDR_In), .select(MIO_EN), .out(MDR_d));
 	
 	// ===== IR ======
 	logic [15:0] IR_out, IR_d;
-	reg_16 IR_reg(.Clk(Clk), .D(IR_d), .Data_Out(IR_out), .Load(LD_IR), .Reset(Reset));
+	reg_16 IR_reg(.Clk(Clk), .D(Bus_out), .Data_Out(IR_out), .Load(LD_IR), .Reset(Reset));
 	
 	
 	// ===== MAR ======

@@ -7,6 +7,7 @@ logic [9:0] SW;
 logic	Clk, Run, Continue;
 logic [9:0] LED;
 logic [6:0] HEX0, HEX1, HEX2, HEX3;
+logic [15:0] MAR, PC, MDR, IR, Readout; 
 
 
 always begin : CLOCK
@@ -18,7 +19,11 @@ end
 
 
 slc3_testtop test0(.*);
-                   
+assign MAR = test0.slc.d0.MAR;
+assign PC = test0.slc.d0.PC_out;
+assign MDR = test0.slc.d0.MDR_out;
+assign IR = test0.slc.d0.IR_out;
+assign Readout = test0.mem.readout;                   
                    
 initial begin      
 
@@ -32,12 +37,16 @@ Continue = 1;
 Run = 0;
 Continue = 0;
 
-#2 //Start the processor
+#4 //Start the processor
 Continue = 1;
 
-#2 //simulate button press
+#4 //simulate button press
 Run = 1;
 
+#50
+Continue = 0;
+#2
+Continue = 1;
 
 
 

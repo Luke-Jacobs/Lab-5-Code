@@ -41,7 +41,8 @@ logic LD_MAR, LD_MDR, LD_IR, LD_BEN, LD_CC, LD_REG, LD_PC, LD_LED;
 logic GatePC, GateMDR, GateALU, GateMARMUX;
 logic SR2MUX, ADDR1MUX, MARMUX;
 logic BEN, MIO_EN;
-logic [1:0] PCMUX, DRMUX, SR1MUX, ADDR2MUX, ALUK;
+logic [1:0] PCMUX; 
+logic DRMUX, SR1MUX, ADDR2MUX, ALUK;
 logic [15:0] MDR_In;
 logic [15:0] MAR, MDR, IR;
 
