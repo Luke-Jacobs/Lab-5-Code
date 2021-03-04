@@ -1,15 +1,16 @@
 module PC_operations(
-	input logic PC_out,  // This is the Q output from the PC register (instance in datapath)
+	input logic [15:0] PC_out,  // This is the Q output from the PC register (instance in datapath)
 	input logic [1:0] PCMUX_sig,  // This is taken from the state machine / control unit
 	input logic [15:0] AddrAdder_out,  // The combinational logic output from the address adder
 	input logic [15:0] Bus_out,
 	output logic [15:0] PC_in  // This is the D input into the PC register 
 );
 
+logic [15:0] PC_plus_1;
 always_comb begin
 	// Incrementing combinational logic
-	logic [15:0] PC_plus_1;
-	PC_plus_1 = PC_out + 16'h0001;
+	
+	PC_plus_1 = PC_out +16'h0001;
 	
 	// Implements PCMUX
 	unique case (PCMUX_sig)

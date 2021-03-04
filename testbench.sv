@@ -7,7 +7,8 @@ logic [9:0] SW;
 logic	Clk, Run, Continue;
 logic [9:0] LED;
 logic [6:0] HEX0, HEX1, HEX2, HEX3;
-logic [15:0] MAR, PC, MDR, IR, Readout; 
+logic [1:0] PCMUX;
+logic [15:0] MAR, PC, MDR, IR, Readout, PC_plus_1; 
 
 
 always begin : CLOCK
@@ -23,7 +24,9 @@ assign MAR = test0.slc.d0.MAR;
 assign PC = test0.slc.d0.PC_out;
 assign MDR = test0.slc.d0.MDR_out;
 assign IR = test0.slc.d0.IR_out;
-assign Readout = test0.mem.readout;                   
+assign Readout = test0.mem.readout;
+assign PC_plus_1 = test0.slc.d0.op_PC.PC_plus_1;
+assign PCMUX = test0.slc.d0.op_PC.PCMUX_sig;                   
                    
 initial begin      
 
@@ -43,7 +46,17 @@ Continue = 1;
 #4 //simulate button press
 Run = 1;
 
-#50
+#20
+Continue = 0;
+#2
+Continue = 1;
+
+#20
+Continue = 0;
+#2
+Continue = 1;
+
+#20
 Continue = 0;
 #2
 Continue = 1;
