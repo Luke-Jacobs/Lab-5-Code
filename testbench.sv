@@ -18,7 +18,6 @@ end
 
 
 
-
 slc3_testtop test0(.*);
 assign MAR = test0.slc.d0.MAR;
 assign PC = test0.slc.d0.PC_out;
