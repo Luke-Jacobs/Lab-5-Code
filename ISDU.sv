@@ -58,10 +58,17 @@ module ISDU (   input logic         Clk,
 						S_18, 
 						S_33_1, 
 						S_33_2,
-						S_33_3,
 						S_35, 
-						S_32, 
-						S_01}   State, Next_state;   // Internal state logic
+						S_32, //Decode
+						S_01, //ADD
+						S_05, //AND
+						S_09, //NOT
+						S_00, //BR
+						S_12, //JSR
+						S_06, //LDR
+						S_07, //STR
+						S_27, //Part of LDR: DR<-MDR, set CC
+					}   State, Next_state;   // Internal state logic
 		
 	always_ff @ (posedge Clk)
 	begin
@@ -115,11 +122,9 @@ module ISDU (   input logic         Clk,
 			S_33_1 : 
 				Next_state = S_33_2;
 			S_33_2 : 
-				Next_state = S_33_3;
-			S_33_3 :
 				Next_state = S_35;
 			S_35 : 
-				Next_state = PauseIR1;
+				Next_state = S_32;  // Got to decode
 			// PauseIR1 and PauseIR2 are only for Week 1 such that TAs can see 
 			// the values in IR.
 			PauseIR1 : 
@@ -134,20 +139,82 @@ module ISDU (   input logic         Clk,
 					Next_state = S_18;
 			S_32 : 
 				case (Opcode)
-					4'b0001 : 
+					4'b0001 : //ADD opcode
 						Next_state = S_01;
-
-					// You need to finish the rest of opcodes.....
+					4'b0101 : //AND opcode
+						Next_state = S_05;
+					4'b1001 : //NOT opcode
+						Next_state = S_09;
+					4'b0000 : //BR opcode
+						Next_state = S_00;
+					4'b1100 : //JMP opcode
+						Next_state = S_12;
+					4'b0100 : //JSR opcode
+						Next_state = S_04;
+					4'b0110 : //LDR opcode
+						Next_state = S_06;
+					4'b0111 : //STR opcode
+						Next_state = S_07;
+					4'b1101 : //PSE opcode
+						Next_state = PauseIR1;
 
 					default : 
 						Next_state = S_18;
 				endcase
+				
+			// Go to start (state 18)
 			S_01 : 
 				Next_state = S_18;
+			S_05 :
+				Next_state = S_18;
+			S_09 :
+				Next_state = S_18;
+			S_27 :
+				Next_state = S_18;
+			S_16_3 :  // TODO This is the difficult write state (will require multiple states)
+				Next_state = S_18;
+			S_21 :
+				Next_state = S_18;
+			S_22 :
+				Next_state = S_18;
+			S_12 :
+				Next_state = S_18;
+			
+			
+			// LDR Sequence
+			S_06 :
+				Next_state = S_25_1;  // Part of LDR
+			S_25_1 :
+				Next_state = S_25_2;  // Second state of the LDR read
+			S_25_2 : 
+				Next_state = S_27;
+			
+			// STR Sequence
+			S_07 :
+				Next_state = S_23;
+			S_23 :
+				Next_state = S_16_1;
+			S_16_1 :
+				Next_state = S_16_2;
+			S_16_2 :
+				Next_state = S_16_3;
+				
+			// JSR Sequence
+			S_04 :
+				Next_state = S_21;
+			
+			// BR Sequence - conditional on the BEN register set in state 32
+			S_00 :
+				if (BEN)
+					Next_state = S_22;
+				else
+					Next_state = S_18;
 
+			
 			// You need to finish the rest of states.....
 
-			default : ;
+			default : 
+				Next_state = S_18; // If this is hit then an error has happened
 
 		endcase
 		
@@ -168,30 +235,135 @@ module ISDU (   input logic         Clk,
 					Mem_OE = 1'b1;
 					LD_MDR = 1'b1;
 				end
-			S_33_2 :
-				begin
-					Mem_OE = 1'b1;
-					LD_MDR = 1'b1;
-				end
 			S_35 : 
 				begin 
 					GateMDR = 1'b1;
 					LD_IR = 1'b1;
 				end
-			PauseIR1: ;
-			PauseIR2: ;
+			PauseIR1: 
+				LD_LED = 1'b1;
+			PauseIR2: 
+				LD_LED = 1'b1;
 			S_32 : 
 				LD_BEN = 1'b1;
-			S_01 : 
+			
+			// ===== ADD =====
+			
+			S_01 : // DR<-SR1+OP2, set CC  <-- Note that OP2 can be SR2 or SEXT[imm5]
 				begin 
-					SR2MUX = IR_5;
-					ALUK = 2'b00;
+					SR1MUX = 1'b0;  // TODO Remember to implement the Reg_File.sv to have IR[8:6] chosen when SR1=0
+					SR2MUX = IR_5;  // When IR_5=1, choose SEXT[imm5] else choose SR2
+					DRMUX = 1'b0;  // Choose IR[11:9]
+					ALUK = 2'b00;  // b00 is chosen as ADD
 					GateALU = 1'b1;
 					LD_REG = 1'b1;
-					// incomplete...
+					LD_CC = 1'b1;
 				end
 
-			// You need to finish the rest of states.....
+			// ===== AND =====
+	
+			S_05 : // DR<-SR1&OP2, set CC
+				begin
+					SR1MUX = 1'b0;
+					SR2MUX = IR_5;  // When IR_5=1, choose SEXT[imm5] else choose SR2
+					DRMUX = 1'b0;  // Choose IR[11:9]
+					ALUK = 2'b01;  // b01 is chosen as the AND
+					GateALU = 1'b1;
+					LD_REG = 1'b1; 
+					LD_CC = 1'b1;
+				end
+
+			// ===== NOT =====
+	
+			S_09 : // DR<-NOT(SR), set CC
+				begin
+					SR1MUX = 1'b0;
+					SR2MUX = IR_5;  // When IR_5=1, choose SEXT[imm5] else choose SR2
+					DRMUX = 1'b0;  // Choose IR[11:9]
+					ALUK = 2'b10;  // b10 is chosen as the NOT
+					GateALU = 1'b1;
+					LD_REG = 1'b1; 
+					LD_CC = 1'b1;
+				end
+			
+			// ===== BR =====
+			
+			S_00 : ; // [BEN], Do nothing with signals
+		
+			// ===== JMP =====
+			
+			S_12 : // PC <- BaseR
+				begin
+					SR1MUX = 1'b0;
+					ADDR1MUX = 1'b1;  // Choose SR1 OUT (the BaseR) to be the new PC
+					ADDR2MUX = 1'b0;  // Add just 0's to BaseR to load it into PC
+					LD_PC = 1'b1;
+					PCMUX = 2'b01;  // Choose adder output
+				end
+				
+			// ===== JSR States =====
+			
+			S_04 : // R7 <- PC
+				begin
+					DRMUX = 1'b1;  // Load R7 into Reg file
+					LD_REG = 1'b1;
+					GatePC = 1'b1;
+				end
+			S_21: // PC <- PC + SEXT[PCoffset11]
+				begin
+					LD_PC = 1'b1;  // Load new PC
+					ADDR2MUX = 1'b11;  // Choose SEXT[IR[10:0]]
+					ADDR1MUX = 1'b0;  // Choose PC
+				end
+			
+			// ===== LDR =====
+			
+			S_06: // MAR <- B+off6
+				begin
+					ADDR2MUX = 2'b01;
+					LD_MAR = 1'b1;
+					SR1MUX = 1'b0;
+					GateMARMUX = 1'b1;
+				end
+			S_25_1: // Read from RAM
+				begin
+					Mem_OE = 1'b1;
+				end
+			S_25_2: // Read from RAM step 2 (this is when RAM is available to load into MDR)
+				begin
+					Mem_OE = 1'b1;
+					LD_MDR = 1'b1;
+				end
+			S_27:
+				begin
+					LD_REG = 1'b1;
+					GateMDR = 1'b1;
+					DRMUX = 1'b0;
+				end
+				
+			// ===== STR =====
+		
+			S_07: // MAR <- B+off6
+				begin
+					ADDR2MUX = 2'b01;
+					LD_MAR = 1'b1;
+					SR1MUX = 1'b0;
+					GateMARMUX = 1'b1;
+				end
+			S_23: // MDR <- SR
+				begin
+					LD_MDR = 1'b1;
+					SR1MUX = 1'b1;
+					GateALU = 1'b1;
+				end
+			S_16_1: // M[MAR] <- MDR Step 1
+					Mem_WE = 1'b1;
+			S_16_2: // M[MAR] <- MDR Step 2
+					Mem_WE = 1'b1;
+			S_16_3: // M[MAR] <- MDR Step 3
+				Mem_WE = 1'b1;	
+						
+			// You need to finish the rest of states...
 
 			default : ;
 		endcase
