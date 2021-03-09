@@ -34,7 +34,7 @@ module reg_file(
 	mux_2_to_1 #(3) (.a(IR_8_to_6), .b(IR_11_to_9), .select(SR1MUX), .out(SR1_code));
 	
 	always_comb
-	
+		begin
 		// Output / SR combinational logic
 		SR1_out = 16'hXXXX;
 		unique case (SR1_code)

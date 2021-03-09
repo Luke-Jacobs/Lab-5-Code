@@ -15,7 +15,6 @@ module Bus(
 				4'b0010 : bus_out = In_ALU;
 				4'b0100 : bus_out = In_MARMUX;
 				4'b1000 : bus_out = In_MDR;
-				//default : %display("bus error"); for testing
 			endcase
 	end
 

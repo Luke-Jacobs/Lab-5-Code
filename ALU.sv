@@ -7,17 +7,19 @@ module ALU(
 );
 
 always_comb
-	unique case (aluk)
-		// ADD operation
-		2'b00:
-			out = A + B;
-		// AND operation
-		2'b01:
-			out = A & B;
-		// NOT operation
-		2'b10:
-			out = ~A;
-	endcase
-end
+	begin
+		out = 16'hXXXX;
+		unique case (aluk)
+			// ADD operation
+			2'b00:
+				out = A + B;
+			// AND operation
+			2'b01:
+				out = A & B;
+			// NOT operation
+			2'b10:
+				out = ~A;
+		endcase
+	end
 
 endmodule

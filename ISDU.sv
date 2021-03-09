@@ -52,7 +52,7 @@ module ISDU (   input logic         Clk,
 									Mem_WE
 				);
 
-	enum logic [3:0] {  Halted, 
+	enum logic [27:0] {  Halted, 
 						PauseIR1, 
 						PauseIR2, 
 						S_18, 
@@ -78,7 +78,7 @@ module ISDU (   input logic         Clk,
 						S_12, //JSR
 						S_06, //LDR
 						S_07, //STR
-						S_27, //Part of LDR: DR<-MDR, set CC
+						S_27 //Part of LDR: DR<-MDR, set CC
 					}   State, Next_state;   // Internal state logic
 		
 	always_ff @ (posedge Clk)
@@ -338,7 +338,7 @@ module ISDU (   input logic         Clk,
 			S_21: // PC <- PC + SEXT[PCoffset11]
 				begin
 					LD_PC = 1'b1;  // Load new PC
-					ADDR2MUX = 1'b11;  // Choose SEXT[IR[10:0]]
+					ADDR2MUX = 2'b11;  // Choose SEXT[IR[10:0]]
 					ADDR1MUX = 1'b0;  // Choose PC
 				end
 			

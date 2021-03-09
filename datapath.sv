@@ -3,20 +3,20 @@ module datapath(
 	input logic Clk, Reset,
 	input logic LD_MAR, LD_MDR, LD_IR, LD_BEN, LD_CC, LD_REG, LD_PC, LD_LED, // TODO: Figure out how to wire the LED's straight to the IR register
 	input logic GatePC, GateMDR, GateALU, GateMARMUX, ALUK,
-	input logic SR2MUX, SR1MUX, ADDR1MUX, ADDR2MUX, DRMUX, MARMUX,
+	input logic SR2MUX, SR1MUX, ADDR1MUX, ADDR2MUX, DRMUX,
 	input logic MIO_EN,
 	input logic [1:0] PCMUX,
 	input logic [15:0] MDR_In, // This is the same thing as Data_to_CPU
-	output logic [3:0] HEX0, HEX1, HEX2, HEX3,
 	output logic [15:0] MAR,
 	output logic [15:0] MDR,
+	output logic [15:0] IR,
 	output logic BEN
 );
-	// WEEK 1 CODE - Reconnect Mem2IO to the hex drivers after week 1 demo
 
-	// "Special" registers
+
 	logic [15:0] SR2_out, SR1_out, Bus_out, AddrAdder_out, PC_out, PC_d, MDR_out, MDR_d, IR_out, 
 					 ALU_out;
+	assign IR = IR_out; //assigns IR output
 	logic [15:0] sext_sr2_ir, SR2mux_out;
 	logic [15:0] sext_ir_11, sext_ir_9, sext_ir_6;
 	

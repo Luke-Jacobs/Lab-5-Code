@@ -18,8 +18,8 @@ module  Mem2IO ( 	input logic Clk, Reset,
 					input logic OE, WE,
 					input logic [9:0]  Switches,
 					input logic [15:0] Data_from_CPU, Data_from_SRAM,
-					output logic [15:0] Data_to_CPU, Data_to_SRAM
-					//output logic [3:0]  HEX0, HEX1, HEX2, HEX3 
+					output logic [15:0] Data_to_CPU, Data_to_SRAM,
+					output logic [3:0]  HEX0, HEX1, HEX2, HEX3 
 					);
 
 	logic [15:0] hex_data;
@@ -46,9 +46,9 @@ module  Mem2IO ( 	input logic Clk, Reset,
 			hex_data <= Data_from_CPU;
     end
        
-//	assign HEX0 = hex_data[3:0];
-//	assign HEX1 = hex_data[7:4];
-//	assign HEX2 = hex_data[11:8];
-//	assign HEX3 = hex_data[15:12];
+	assign HEX0 = hex_data[3:0];
+	assign HEX1 = hex_data[7:4];
+	assign HEX2 = hex_data[11:8];
+	assign HEX3 = hex_data[15:12];
 
 endmodule

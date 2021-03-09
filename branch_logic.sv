@@ -11,9 +11,10 @@ module branch_logic(
 
 	logic N_out, Z_out, P_out, Bus_zero;
 	logic N_in, Z_in, P_in, BEN_in;
-	reg_16 nzp_reg(.Clk(Clk), .Load(LOAD_CC), .Reset(Reset), .D({13'b0, N_in, Z_in, P_in}), .Data_Out());
+	reg_16 nzp_reg(.Clk(Clk), .Load(LOAD_CC), .Reset(Reset), .D({13'b0, N_in, Z_in, P_in}), .Data_Out({13'b0, N_out, Z_out, P_out}));
 	
 	always_comb
+	begin
 		N_in = Bus_In[15];
 	
 		if (Bus_In == 16'h0000)
@@ -23,7 +24,7 @@ module branch_logic(
 		
 		P_in = ~Bus_In[15];
 		
-		BEN_in = (IR_part[2]&N) | (IR_part[1]&Z) | (IR_part[0]&P);
+		BEN_in = (IR_part[2]&N_out) | (IR_part[1]&Z_out) | (IR_part[0]&P_out);
 	end
 	
 	// BEN Flip Flop
