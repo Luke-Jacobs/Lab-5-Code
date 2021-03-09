@@ -11,7 +11,10 @@ module branch_logic(
 
 	logic N_out, Z_out, P_out, Bus_zero;
 	logic N_in, Z_in, P_in, BEN_in;
-	reg_16 nzp_reg(.Clk(Clk), .Load(LOAD_CC), .Reset(Reset), .D({13'b0, N_in, Z_in, P_in}), .Data_Out({13'b0, N_out, Z_out, P_out}));
+	//reg_16 nzp_reg(.Clk(Clk), .Load(LOAD_CC), .Reset(Reset), .D({13'b0, N_in, Z_in, P_in}), .Data_Out({13'b0, N_out, Z_out, P_out}));
+	
+	reg_3 nzp_reg(.Clk(Clk), .Load(LOAD_CC), .Reset(Reset), .D({N_in,Z_in,P_in}), .Data_Out({N_out,Z_out,P_out}));
+	
 	
 	always_comb
 	begin

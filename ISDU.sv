@@ -52,7 +52,7 @@ module ISDU (   input logic         Clk,
 									Mem_WE
 				);
 
-	enum logic [27:0] {  Halted, 
+	enum logic [26:0] {  Halted, 
 						PauseIR1, 
 						PauseIR2, 
 						S_18, 

@@ -27,11 +27,11 @@ module reg_file(
 
 	//DRMUX
 	logic [2:0] DR_code;
-	mux_2_to_1 #(3) (.a(IR_11_to_9), .b(3'b111), .select(DRMUX), .out(DR_code));
+	mux_2_to_1 #(3) DRMUX0(.a(IR_11_to_9), .b(3'b111), .select(DRMUX), .out(DR_code));
 	
 	//SR1MUX
 	logic [2:0] SR1_code;
-	mux_2_to_1 #(3) (.a(IR_8_to_6), .b(IR_11_to_9), .select(SR1MUX), .out(SR1_code));
+	mux_2_to_1 #(3) SR1MUX0(.a(IR_8_to_6), .b(IR_11_to_9), .select(SR1MUX), .out(SR1_code));
 	
 	always_comb
 		begin

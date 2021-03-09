@@ -2,10 +2,10 @@
 module datapath(
 	input logic Clk, Reset,
 	input logic LD_MAR, LD_MDR, LD_IR, LD_BEN, LD_CC, LD_REG, LD_PC, LD_LED, // TODO: Figure out how to wire the LED's straight to the IR register
-	input logic GatePC, GateMDR, GateALU, GateMARMUX, ALUK,
-	input logic SR2MUX, SR1MUX, ADDR1MUX, ADDR2MUX, DRMUX,
+	input logic GatePC, GateMDR, GateALU, GateMARMUX, 
+	input logic SR2MUX, SR1MUX, ADDR1MUX, DRMUX,
 	input logic MIO_EN,
-	input logic [1:0] PCMUX,
+	input logic [1:0] PCMUX, ADDR2MUX, ALUK,
 	input logic [15:0] MDR_In, // This is the same thing as Data_to_CPU
 	output logic [15:0] MAR,
 	output logic [15:0] MDR,
