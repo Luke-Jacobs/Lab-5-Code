@@ -80,7 +80,7 @@ ISDU state_controller(
 	.Opcode(IR[15:12]), .IR_5(IR[5]), .IR_11(IR[11]),
    .Mem_OE(OE), .Mem_WE(WE), .PCMUX(PCMUX), 
 	.DRMUX(DRMUX), .SR1MUX(SR1MUX), .ADDR2MUX(ADDR2MUX), 
-	.ALUK(ALUK)
+	.ALUK(ALUK), .BEN(BEN)
 	);
 
 // SRAM WE register

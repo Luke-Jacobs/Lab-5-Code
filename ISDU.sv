@@ -56,9 +56,20 @@ module ISDU (   input logic         Clk,
 						PauseIR1, 
 						PauseIR2, 
 						S_18, 
+						S_04, // R7<-PC for JSR
+						S_21, // PC<-PC+off11 for JSR
+						S_23, // MDR<-SR
 						S_33_1, 
 						S_33_2,
+						S_33_3,
 						S_35, 
+						S_25_1, // MDR<-M[MAR] for LDR
+						S_25_2,
+						S_25_3,
+						S_16_1, // M[MAR] <- MDR for STR
+						S_16_2,
+						S_16_3,
+						S_22, //Add PC offset (PC<-PC+off9) for the BR instruction
 						S_32, //Decode
 						S_01, //ADD
 						S_05, //AND
@@ -187,6 +198,8 @@ module ISDU (   input logic         Clk,
 			S_25_1 :
 				Next_state = S_25_2;  // Second state of the LDR read
 			S_25_2 : 
+				Next_state = S_25_3;
+			S_25_3 :
 				Next_state = S_27;
 			
 			// STR Sequence
@@ -231,6 +244,11 @@ module ISDU (   input logic         Clk,
 			S_33_1 : 
 				Mem_OE = 1'b1;
 			S_33_2 : 
+				begin 
+					Mem_OE = 1'b1;
+					LD_MDR = 1'b1;
+				end
+			S_33_3 :
 				begin 
 					Mem_OE = 1'b1;
 					LD_MDR = 1'b1;
@@ -289,6 +307,14 @@ module ISDU (   input logic         Clk,
 			// ===== BR =====
 			
 			S_00 : ; // [BEN], Do nothing with signals
+			
+			S_22 :
+				begin
+					ADDR2MUX = 2'b10;
+					ADDR1MUX = 1'b0;
+					LD_PC = 1'b1;
+					PCMUX = 2'b01;
+				end
 		
 			// ===== JMP =====
 			
@@ -329,7 +355,12 @@ module ISDU (   input logic         Clk,
 				begin
 					Mem_OE = 1'b1;
 				end
-			S_25_2: // Read from RAM step 2 (this is when RAM is available to load into MDR)
+			S_25_2: // Read from RAM step 2
+				begin
+					Mem_OE = 1'b1;
+					LD_MDR = 1'b1;
+				end
+			S_25_3: // Read from RAM step 3 (this is when RAM is available to load into MDR)
 				begin
 					Mem_OE = 1'b1;
 					LD_MDR = 1'b1;
@@ -339,6 +370,7 @@ module ISDU (   input logic         Clk,
 					LD_REG = 1'b1;
 					GateMDR = 1'b1;
 					DRMUX = 1'b0;
+					LD_CC = 1'b1;
 				end
 				
 			// ===== STR =====
@@ -357,9 +389,9 @@ module ISDU (   input logic         Clk,
 					GateALU = 1'b1;
 				end
 			S_16_1: // M[MAR] <- MDR Step 1
-					Mem_WE = 1'b1;
+				Mem_WE = 1'b1;
 			S_16_2: // M[MAR] <- MDR Step 2
-					Mem_WE = 1'b1;
+				Mem_WE = 1'b1;
 			S_16_3: // M[MAR] <- MDR Step 3
 				Mem_WE = 1'b1;	
 						

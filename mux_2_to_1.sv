@@ -1,8 +1,9 @@
-module mux_2_to_1(
-	input logic [15:0] a,
-	input logic [15:0] b,
+
+module mux_2_to_1 #(parameter width = 16) (
+	input logic [width-1:0] a,
+	input logic [width-1:0] b,
 	input logic select,
-	output logic [15:0] out
+	output logic [width-1:0] out
 );
 
 always_comb
@@ -11,7 +12,6 @@ always_comb
 			out = b;
 		else
 			out = a;
-		
 	end
 
 endmodule
