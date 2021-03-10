@@ -86,24 +86,27 @@ module reg_file(
 		ld_r5 = 1'b0;
 		ld_r6 = 1'b0;
 		ld_r7 = 1'b0;
-		unique case (DR_code)
-			3'b000:
-				ld_r0 = 1'b1;
-			3'b001:
-				ld_r1 = 1'b1;
-			3'b010:
-				ld_r2 = 1'b1;
-			3'b011:
-				ld_r3 = 1'b1;
-			3'b100:
-				ld_r4 = 1'b1;
-			3'b101:
-				ld_r5 = 1'b1;
-			3'b110:
-				ld_r6 = 1'b1;
-			3'b111:
-				ld_r7 = 1'b1;
-		endcase
+		if(LD_REG == 1'b1)
+			begin
+				unique case (DR_code)
+					3'b000:
+						ld_r0 = 1'b1;
+					3'b001:
+						ld_r1 = 1'b1;
+					3'b010:
+						ld_r2 = 1'b1;
+					3'b011:
+						ld_r3 = 1'b1;
+					3'b100:
+						ld_r4 = 1'b1;
+					3'b101:
+						ld_r5 = 1'b1;
+					3'b110:
+						ld_r6 = 1'b1;
+					3'b111:
+						ld_r7 = 1'b1;
+				endcase
+			end
 	end
 
 endmodule
