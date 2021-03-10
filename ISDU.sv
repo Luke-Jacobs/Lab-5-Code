@@ -348,9 +348,10 @@ module ISDU (   input logic         Clk,
 			
 			S_06: // MAR <- B+off6
 				begin
-					ADDR2MUX = 2'b01;
+					ADDR2MUX = 2'b01; //SEXT [5:0]
 					LD_MAR = 1'b1;
 					SR1MUX = 1'b0;
+					ADDR1MUX = 1'b1;
 					GateMARMUX = 1'b1;
 				end
 			S_25_1: // Read from RAM
@@ -383,6 +384,7 @@ module ISDU (   input logic         Clk,
 					LD_MAR = 1'b1;
 					SR1MUX = 1'b0;
 					GateMARMUX = 1'b1;
+					ADDR1MUX = 1'b1;
 				end
 			S_23: // MDR <- SR
 				begin
