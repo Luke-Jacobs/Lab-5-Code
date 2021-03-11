@@ -21,11 +21,15 @@ module branch_logic(
 		N_in = Bus_In[15];
 	
 		if (Bus_In == 16'h0000)
-			Z_in = 1'b1;
+			begin
+				Z_in = 1'b1;
+				P_in = 1'b0;
+			end	
 		else
-			Z_in = 1'b0;
-		
-		P_in = ~Bus_In[15];
+			begin
+				Z_in = 1'b0;
+				P_in = ~Bus_In[15];
+			end
 		
 		BEN_in = (IR_part[2]&N_out) | (IR_part[1]&Z_out) | (IR_part[0]&P_out);
 	end
