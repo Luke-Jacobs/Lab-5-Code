@@ -8,7 +8,7 @@ module ALU(
 
 always_comb
 	begin
-		out = 16'hXXXX;
+		out = 16'h0000;
 		unique case (aluk)
 			// ADD operation
 			2'b00:
