@@ -54,7 +54,7 @@ assign ADDR = MAR;
 assign MIO_EN = OE;
 
 //Assign LEDS
-assign LED = IR[15:7];
+assign LED = IR[9:0];
 
 // Connect everything to the data path (you have to figure out this part)
 

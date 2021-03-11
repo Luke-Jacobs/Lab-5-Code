@@ -19,6 +19,8 @@ always_comb
 			// NOT operation
 			2'b10:
 				out = ~A;
+			2'b11:
+				out = A;
 		endcase
 	end
 

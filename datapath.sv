@@ -17,6 +17,7 @@ module datapath(
 	logic [15:0] SR2_out, SR1_out, Bus_out, AddrAdder_out, PC_out, PC_d, MDR_out, MDR_d, IR_out, 
 					 ALU_out;
 	assign IR = IR_out; //assigns IR output
+	assign MDR = MDR_out;
 	logic [15:0] sext_sr2_ir, SR2mux_out;
 	logic [15:0] sext_ir_11, sext_ir_9, sext_ir_6;
 	
@@ -27,7 +28,7 @@ module datapath(
 							  .PC_in(PC_d));
 	
 	// ===== MDR =====
-	assign MDR = MDR_out; //Makes sure MDR gets to the MEM2IO
+	 //Makes sure MDR gets to the MEM2IO
 	reg_16 MDR_reg(.Clk(Clk), .D(MDR_d), .Data_Out(MDR_out), .Load(LD_MDR), .Reset(Reset));
 	// MDR Operations
 	mux_2_to_1 mux_mio_en(.a(Bus_out), .b(MDR_In), .select(MIO_EN), .out(MDR_d));

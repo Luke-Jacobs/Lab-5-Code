@@ -50,7 +50,7 @@ Continue = 1; //off
 
 //Basic IO test 1
 
-SW = 10'b0000001011;
+SW = 10'b0000010100;
 
 
 #2

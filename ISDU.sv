@@ -392,6 +392,7 @@ module ISDU (   input logic         Clk,
 					LD_MDR = 1'b1;
 					SR1MUX = 1'b1;
 					GateALU = 1'b1;
+					ALUK = 2'b11;
 				end
 			S_16_1: // M[MAR] <- MDR Step 1
 				Mem_WE = 1'b1;
