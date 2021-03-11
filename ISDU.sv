@@ -342,6 +342,7 @@ module ISDU (   input logic         Clk,
 					LD_PC = 1'b1;  // Load new PC
 					ADDR2MUX = 2'b11;  // Choose SEXT[IR[10:0]]
 					ADDR1MUX = 1'b0;  // Choose PC
+					PCMUX = 2'b01;  // Choose adder output
 				end
 			
 			// ===== LDR =====

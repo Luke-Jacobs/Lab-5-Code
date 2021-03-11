@@ -44,7 +44,7 @@ task memory_contents(output logic[15:0] mem_array[0:size-1]);
    mem_array[   8 ] =    opSTR(R1, R0, outHEX)    ;       // Output
    mem_array[   9 ] =    opPSE(12'hC02)           ;       // Checkpoint 2 - read output, prepare to input
    mem_array[  10 ] =    opBR(nzp, -4)            ;       // Repeat
-                                          
+
                                                           // Basic I/O test 3 (Self-modifying code)
    mem_array[  11 ] =    opPSE(12'h801)           ;       // Checkpoint 1 - prepare to input
    mem_array[  12 ] =    opJSR(0)                 ;       // Get PC address
